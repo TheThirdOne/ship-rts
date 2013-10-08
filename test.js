@@ -26,7 +26,7 @@ function set(x,y,val){
 }
 for (var x = 0; x < canvas.width; x++) {
     for (var y = 0; y < canvas.height; y++) {
-        var r = simplex.noise2D(x / 800, y / 800, t) * 0.5 + 0.5;
+        var r = simplex.noise2D(x / 200, y / 200, t) * 0.5 + 0.5;
         if (r > .9) {
             set(x,y,2);
         } else {
