@@ -1,0 +1,10 @@
+#!/bin/sh
+sudo apt-get update 
+sudo apt-get install npm libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
+npm install -g node-gyp
+npm install simplex-noise
+npm install canvas@1.0.4
+cd node_modules/canvas
+node-gyp configure
+node-gyp build
+cd ../..
