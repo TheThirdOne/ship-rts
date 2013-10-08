@@ -9,12 +9,12 @@ color[.5] = {r: 77,g: 112,b: 255};
 color[.3] = {r: 25,g: 55,b: 176};
 var SimplexNoise = require('simplex-noise');
 var simplex = new SimplexNoise(),
-    /*Canvas = require('canvas'),
+    Canvas = require('canvas'),
+    fs = require('fs'),
     canvas = new Canvas(1024, 1024),
     ctx = canvas.getContext('2d'),
     imgdata = ctx.getImageData(0, 0, canvas.width, canvas.height),
-    data = imgdata.data,*/
-    canvas = {width: 1024, height: 1024},
+    data = imgdata.data,
     block = [],
     t = 20;
 times += " , " + (new Date().getTime()-date.getTime());
@@ -38,7 +38,7 @@ for (var x = 0; x < canvas.width; x++) {
     }
 }
 times += " , " + (new Date().getTime()-date.getTime());
-/*for (var x = 0; x < canvas.width; x++) {
+for (var x = 0; x < canvas.width; x++) {
     for (var y = 0; y < canvas.height; y++) {
         temp = get(x,y);
         data[(x + y * canvas.width) * 4 + 0] = color[temp].r;
@@ -48,12 +48,12 @@ times += " , " + (new Date().getTime()-date.getTime());
     }
 }
 times += " , " + (new Date().getTime()-date.getTime());
-t++;*/
-//ctx.putImageData(imgdata, 0, 0);
+t++;
+ctx.putImageData(imgdata, 0, 0);
 console.log(times);
-/*var out = fs.createWriteStream(__dirname + '/state.png')
+var out = fs.createWriteStream(__dirname + '/state.png')
   , stream = canvas.createPNGStream();
 
 stream.on('data', function(chunk){
   out.write(chunk);
-});*/
+});
