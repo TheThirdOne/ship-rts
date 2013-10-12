@@ -57,3 +57,9 @@ var out = fs.createWriteStream(__dirname + '/state.png')
 stream.on('data', function(chunk){
   out.write(chunk);
 });
+var port = 8000;
+var express = require('express');
+var app = express();
+app.use(app.router);
+app.use(express.static(__dirname));
+app.listen(port);
