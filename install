@@ -1,13 +1,23 @@
 #!/bin/sh
-sudo apt-get update 
-sudo apt-get install -y python-software-properties python g++ make
-sudo add-apt-repository ppa:chris-lea/node.js
-sudo apt-get update
-sudo apt-get install -y nodejs libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
-npm install -g node-gyp
-npm install simplex-noise
-npm install canvas@1.0.4
-cd node_modules/canvas
-node-gyp configure
-node-gyp build
+touch install.log
+echo "If this installation fails for any reason look at install.log"
+echo "Updating apt-get"
+sudo apt-get update >> install.log
+echo "Preparing to install node.js"
+sudo apt-get install -y python-software-properties python g++ make >> install.log
+sudo add-apt-repository -y ppa:chris-lea/node.js >> install.log
+sudo apt-get update >> install.log
+echo "Installing node.js and other apt-get essentials"
+sudo apt-get install -y nodejs libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential >> install.log
+echo "Installing node-gyp"
+npm install -g node-gyp >> install.log
+echo "Installing simplex-noise"
+npm install simplex-noise >> install.log
+echo "Downloading canvas"
+npm install canvas@1.0.4 >> install.log
+cd node_modules/canvas >> install.log
+echo "Installing canvas"
+node-gyp configure >> install.log
+node-gyp build >> install.log
 cd ../..
+echo "Done"
