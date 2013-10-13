@@ -7,11 +7,14 @@ color[1] = {r: 240,g: 205,b: 101};
 color[.7] = {r: 121,g: 137,b: 213};
 color[.5] = {r: 77,g: 112,b: 255};
 color[.3] = {r: 25,g: 55,b: 176};
-var SimplexNoise = require('simplex-noise');
-var simplex = new SimplexNoise(),
+var SimplexNoise = require('simplex-noise'),
+    generator = require('./mersenne-twister.js').MersenneTwister;
+    random = new generator(1);
+var m = function(){return random.random()},
+    simplex = new SimplexNoise(m),
     Canvas = require('canvas'),
     fs = require('fs'),
-    canvas = new Canvas(1024, 1024),
+    canvas = new Canvas(4096, 4096),
     ctx = canvas.getContext('2d'),
     imgdata = ctx.getImageData(0, 0, canvas.width, canvas.height),
     data = imgdata.data,
@@ -26,7 +29,7 @@ function set(x,y,val){
 }
 for (var x = 0; x < canvas.width; x++) {
     for (var y = 0; y < canvas.height; y++) {
-        var r = simplex.noise2D(x / 200, y / 200, t) * 0.5 + 0.5;
+        var r = simplex.noise2D(x / 800, y / 800, t) * 0.5 + 0.5;
         if (r > .9) {
             set(x,y,2);
         } else {
