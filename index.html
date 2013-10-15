@@ -1,0 +1,58 @@
+<html>
+    <head>
+    </head>
+    <body>
+    	<canvas id="test" height="512" width="1024"></canvas>
+    	<script>
+    	    var canvas = document.getElementById("test");
+    	    var mouse = {};
+    	    mouse.down = false;
+    	    mouse.x = 0;
+    	    mouse.y = 0;
+    	    mouse.dx = 0;
+    	    mouse.dy = 0;
+    	    var shift = {x: 0, y:0, scale:1};
+    	    canvas.onmousedown = function(evt){
+    	        mouse.down = true;
+    	        mouse.x = evt.x;
+    	        mouse.y = evt.y;
+    	    };
+    	    canvas.onmouseup = function(evt){
+    	        mouse.down = false;
+    	        shift.x += mouse.dx/shift.scale;
+    	        shift.y += mouse.dy/shift.scale;
+    	        mouse.dx = 0;
+    	        mouse.dy = 0;
+    	    };
+    	    canvas.onmousemove = function(evt){
+    	        if(mouse.down){
+    	            mouse.dx = evt.x - mouse.x;
+    	    		mouse.dy = evt.y - mouse.y;
+    	    		console.log(mouse);
+    	        }
+    	    };
+    	    canvas.onmousewheel = function(evt){
+    	    	if(mouse.down){
+    	    		canvas.onmouseup();
+    	    		canvas.onmousedown();
+    	    	}
+    	    	console.log(evt);
+    	    	var scalenew = Math.pow(2,evt.wheelDelta/120);
+    	    	shift.x += (evt.x*(1-scalenew))/(shift.scale*scalenew);
+    	    	shift.y += (evt.y*(1-scalenew))/(shift.scale*scalenew);
+    	    	shift.scale *= scalenew;
+    	    };
+    	    var ctx = canvas.getContext("2d");
+    	    var image = new Image();
+    	    image.onload = function(){
+    	    	render();
+    	    }
+    	    image.src = "state.png"
+    	    function render(){
+    	    	requestAnimationFrame(render);
+    	    	ctx.clearRect(0,0,canvas.width,canvas.height);
+    	    	ctx.drawImage(image,shift.x*shift.scale+mouse.dx,shift.y*shift.scale+mouse.dy,250*shift.scale,250*shift.scale);
+    	    }
+    	</script>
+    </body>
+</html>
