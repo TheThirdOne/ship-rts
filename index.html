@@ -3,15 +3,59 @@
     </head>
     <body>
     	<canvas id="test" height="512" width="1024"></canvas>
+        <img id="p1" src="person.png" draggable="true"></img>
     	<script>
     	    var canvas = document.getElementById("test");
+            var images = [];
+            var person = document.getElementById('p1');
+            person.ondragstart = function(e){
+                e.dataTransfer.setData("Text",e.target.id);
+                console.log(e)
+            };
+            canvas.ondragover = function(e){
+                e.preventDefault();
+            }
+            canvas.ondrop = function(e){
+                if (e.stopPropagation) {
+                  e.stopPropagation(); 
+                }
+                console.log(e);
+                var i = document.getElementById(e.dataTransfer.getData("Text"));
+                var entity = {image: i, x: e.x*shift.scale, y:e.y*shift.scale};
+                images.push(entity);
+            }
     	    var mouse = {};
     	    mouse.down = false;
     	    mouse.x = 0;
     	    mouse.y = 0;
     	    mouse.dx = 0;
     	    mouse.dy = 0;
-    	    var shift = {x: 0, y:0, scale:1,add: function(x,y){if(true){this.x += x; this.y+=y}}};
+    	    var shift = {x: 0,
+                         y:0,
+                         scale:1,
+                         add: function(x,y){
+                            var temp = canvas.width*.8-image.width*shift.scale;
+                            if(this.x + x < canvas.width*.2 && this.x + x > temp){
+                                this.x += x;
+                            }else{
+                                if(this.x + x > canvas.width*.2){
+                                    this.x =canvas.width*.2;
+                                }else if (this.x + x < temp){
+                                    this.x = temp;
+                                }
+                            }
+                            temp = canvas.height*.8-image.height*shift.scale;
+                            if(this.y + y < canvas.height*.2 && this.y + y > temp){
+                                this.y +=y;
+                            }else{
+                                if(this.y + y > canvas.height*.2){
+                                    this.y = canvas.height*.2;
+                                }else if (this.y + y < temp){
+                                    this.y = temp;
+                                }
+                            }
+                         }
+                        };
     	    canvas.onmousedown = function(evt){
     	        mouse.down = true;
     	        mouse.x = evt.x;
@@ -19,8 +63,7 @@
     	    };
     	    canvas.onmouseup = function(evt){
     	        mouse.down = false;
-    	        shift.x += mouse.dx/shift.scale;
-    	        shift.y += mouse.dy/shift.scale;
+                shift.add(mouse.dx/shift.scale,mouse.dy/shift.scale);
     	        mouse.dx = 0;
     	        mouse.dy = 0;
     	    };
@@ -28,7 +71,6 @@
     	        if(mouse.down){
     	            mouse.dx = evt.x - mouse.x;
     	    		mouse.dy = evt.y - mouse.y;
-    	    		console.log(mouse);
     	        }
     	    };
     	    canvas.onmousewheel = function(evt){
@@ -37,12 +79,13 @@
     	    		canvas.onmousedown();
     	    	}
     	    	var scalenew = Math.pow(2,evt.wheelDelta/120);
-		if(scalenew*shift.scale > 2 || scalenew*shift.scale < .5){
-			return;
-		}
-    	    	shift.x += (evt.x*(1-scalenew))/(shift.scale*scalenew);
-    	    	shift.y += (evt.y*(1-scalenew))/(shift.scale*scalenew);
+        		if(scalenew*shift.scale > 2 || scalenew*shift.scale < .5){
+        			return;
+        		}
+    	    	var x = (evt.x*(1-scalenew))/(shift.scale*scalenew);
+    	    	var y = (evt.y*(1-scalenew))/(shift.scale*scalenew);
     	    	shift.scale *= scalenew;
+                shift.add(x,y);
     	    };
     	    var ctx = canvas.getContext("2d");
     	    var image = new Image();
@@ -54,6 +97,9 @@
     	    	requestAnimationFrame(render);
     	    	ctx.clearRect(0,0,canvas.width,canvas.height);
     	    	ctx.drawImage(image,shift.x*shift.scale+mouse.dx,shift.y*shift.scale+mouse.dy,1024*shift.scale,1024*shift.scale);
+                for (var i = images.length - 1; i >= 0; i--) {
+                    ctx.drawImage(images[i].image,shift.x*shift.scale+mouse.dx+images[i].x*shift.scale,shift.y*shift.scale+mouse.dy+images[i].y*shift.scale,images[i].image.width*shift.scale,images[i].image.height*shift.scale);
+                };
     	    }
     	</script>
     </body>
