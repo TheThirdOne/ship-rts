@@ -11,7 +11,7 @@
     	    mouse.y = 0;
     	    mouse.dx = 0;
     	    mouse.dy = 0;
-    	    var shift = {x: 0, y:0, scale:1};
+    	    var shift = {x: 0, y:0, scale:1,add: function(x,y){if(true){this.x += x; this.y+=y}})};
     	    canvas.onmousedown = function(evt){
     	        mouse.down = true;
     	        mouse.x = evt.x;
@@ -36,8 +36,10 @@
     	    		canvas.onmouseup();
     	    		canvas.onmousedown();
     	    	}
-    	    	console.log(evt);
     	    	var scalenew = Math.pow(2,evt.wheelDelta/120);
+		if(scalenew*shift.scale > 2 || scalenew*shift.scale < .5){
+			return;
+		}
     	    	shift.x += (evt.x*(1-scalenew))/(shift.scale*scalenew);
     	    	shift.y += (evt.y*(1-scalenew))/(shift.scale*scalenew);
     	    	shift.scale *= scalenew;
@@ -51,7 +53,7 @@
     	    function render(){
     	    	requestAnimationFrame(render);
     	    	ctx.clearRect(0,0,canvas.width,canvas.height);
-    	    	ctx.drawImage(image,shift.x*shift.scale+mouse.dx,shift.y*shift.scale+mouse.dy,250*shift.scale,250*shift.scale);
+    	    	ctx.drawImage(image,shift.x*shift.scale+mouse.dx,shift.y*shift.scale+mouse.dy,1024*shift.scale,1024*shift.scale);
     	    }
     	</script>
     </body>
