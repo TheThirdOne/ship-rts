@@ -3,23 +3,25 @@
     </head>
     <body>
     	<canvas id="test" height="512" width="1024"></canvas>
-        <img id="p1" src="person.png" draggable="true"></img>
+        <img id="p1" src="person.png" width="64" height="128"draggable="true"></img>
     	<script>
     	    var canvas = document.getElementById("test");
             var images = [];
             var person = document.getElementById('p1');
             person.ondragstart = function(e){
                 e.dataTransfer.setData("Text",e.target.id);
-                console.log(e)
+                var img = document.getElementById(e.target.id);
+                e.dataTransfer.setDragImage(img,img.width/3,img.height/3);
             };
             canvas.ondragover = function(e){
                 e.preventDefault();
+                console.log('dragging');
             }
             canvas.ondrop = function(e){
                 if (e.stopPropagation) {
                   e.stopPropagation(); 
                 }
-                console.log(e);
+                //console.log(e);
                 var i = document.getElementById(e.dataTransfer.getData("Text"));
                 var entity = {image: i, x: e.x/shift.scale-shift.x, y:e.y/shift.scale-shift.y};
                 images.push(entity);
@@ -34,7 +36,7 @@
                          y:0,
                          scale:1,
                          add: function(x,y){
-                            var temp = canvas.width*.8-image.width*shift.scale;
+                            var temp = canvas.width*.8/shift.scale-image.width;
                             if(this.x + x < canvas.width*.2 && this.x + x > temp){
                                 this.x += x;
                             }else{
@@ -44,7 +46,7 @@
                                     this.x = temp;
                                 }
                             }
-                            temp = canvas.height*.8-image.height*shift.scale;
+                            temp = canvas.height*.8/shift.scale-image.height;
                             if(this.y + y < canvas.height*.2 && this.y + y > temp){
                                 this.y +=y;
                             }else{
@@ -78,7 +80,7 @@
     	    		canvas.onmouseup();
     	    		canvas.onmousedown();
     	    	}
-    	    	var scalenew = Math.pow(2,evt.wheelDelta/120);
+    	    	var scalenew = Math.pow(1.5,evt.wheelDelta/120);
         		if(scalenew*shift.scale > 2 || scalenew*shift.scale < .5){
         			return;
         		}
