@@ -55,7 +55,7 @@ times += " , " + (new Date().getTime()-date.getTime());
 t++;
 ctx.putImageData(imgdata, 0, 0);
 console.log(times);
-var out = fs.createWriteStream(__dirname + '/state.png')
+var out = fs.createWriteStream(__dirname + '/map/'+seed+'.png')
   , stream = canvas.createPNGStream();
 
 stream.on('data', function(chunk){
